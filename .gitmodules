@@ -1,0 +1,39 @@
+[submodule "maf-desktop-community-packaging"]
+	path = maf-desktop-community-packaging
+	url = https://github.com/theAgileFactory/maf-desktop-community-packaging.git
+[submodule "maf-desktop-app"]
+	path = maf-desktop-app
+	url = https://github.com/theAgileFactory/maf-desktop-app.git
+[submodule "app-framework"]
+	path = app-framework
+	url = https://github.com/theAgileFactory/app-framework.git
+[submodule "maf-dbmdl"]
+	path = maf-dbmdl
+	url = https://github.com/theAgileFactory/maf-dbmdl.git
+[submodule "maf-desktop-datamodel"]
+	path = maf-desktop-datamodel
+	url = https://github.com/theAgileFactory/maf-desktop-datamodel.git
+[submodule "dbmdl-framework"]
+	path = dbmdl-framework
+	url = https://github.com/theAgileFactory/dbmdl-framework.git
+[submodule "replacer"]
+	path = replacer
+	url = https://github.com/theAgileFactory/replacer.git
+[submodule "bizdock-docker"]
+	path = bizdock-docker
+	url = https://github.com/theAgileFactory/bizdock-docker.git
+[submodule "bizdock-documentation"]
+	path = bizdock-documentation
+	url = https://github.com/theAgileFactory/bizdock-documentation.git
+[submodule "bizdock-packaging"]
+	path = bizdock-packaging
+	url = https://github.com/theAgileFactory/bizdock-packaging.git
+[submodule "maf-defaultplugins-extension"]
+	path = maf-defaultplugins-extension
+	url = https://github.com/theAgileFactory/maf-defaultplugins-extension.git
+[submodule "jira-plugin-api"]
+	path = jira-plugin-api
+	url = https://github.com/theAgileFactory/jira-plugin-api.git
+[submodule "bizdock-installation"]
+	path = bizdock-installation
+	url = https://github.com/theAgileFactory/bizdock-installation.git
