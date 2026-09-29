@@ -69,6 +69,14 @@ mvn -Dgpg.skip clean install        # 在任一元件內執行
 - i18n：`conf/messages.{en,fr,de}`。新增的 key 必須三種語言都加上，透過 `framework.utils.Msg.get(...)` 取用。
 - 每個檔案都有 GPL license header（可用 `development/copyright/fix.sh` 加上）。慣例是寫 Javadoc 並附 `@author` tag。Checkstyle（`conf/checkstyle.xml`）限制每行最多 160 字元。
 
+## 跨模組架構重點
+
+- **Security**：`app-framework/app/framework/security` 定義 `ISecurityService`（取得目前 user、`restrict(...)` 角色檢查、`dynamic(name, meta, id)` 動態權限）與 `AbstractSecurityServiceImpl`；desktop 的實作是 `maf-desktop-app/app/security/SecurityServiceImpl.java`，在其中以 `dynamicAuthenticationHandlers.put(IMafConstants.*_DYNAMIC_PERMISSION, ...)` 註冊每個動態權限，並委派給 `app/security/dynamic/*DynamicHelper`（controller 如 `PortfolioEntryController`、`SearchController`、`RoadmapController` 也會直接呼叫這些 helper 來過濾列表）。新增動態權限時，常數、handler、helper 三處都要改。
+- **認證模式**：`conf/framework.conf` 的 `maf.authentication.mode`（`IFrameworkConstants.AuthenticationMode`：`STANDALONE` 由應用程式自行驗證；`FEDERATED`＝SAMLv2、`CAS_SLAVE`/`CAS_MASTER`＝CAS，皆透過 pac4j，`*_MASTER` 表示帳號佈建也由 BizDock 管理），另可啟用 `maf.authentication.bizdock_sso.*`（`framework.security.bizdock_sso`）。登入流程分派在 `AbstractAuthenticator`。
+- **Framework service**：`app-framework/app/framework/services/*`（account、job、kpi、plugins、ext、storage、email、notification、custom_attribute、audit、router、script…），由 `framework.modules.FrameworkModule` binding；desktop 的 `ApplicationServicesModule` 繼承它並加入業務 service。
+- **Plugin / Extension**：extension 是 jar + `conf/extension.xml`，由 `ExtensionManagerServiceImpl` 以 `PlayProxyClassLoader` 載入。`extension.xml` 內每個 `<plugin>` 指向一個 `IPluginRunner`（`start/stop`、`handleIn/OutProvisioningMessage`、menu / action descriptor），用 `<configuration-block>` 宣告預設設定，`<registration-configurator>` 宣告與 `PortfolioEntry` 等物件的註冊 UI；`<widget>` 宣告 dashboard widget（繼承 `WidgetController`）。plugin 的名稱/描述是 i18n key，要加進 extension 自己的 messages。
+- **REST API**：`maf-desktop-app/app/controllers/api/{core,request,system}` 繼承 `ApiController`，每個 action 加 `@ApiAuthentication(additionalCheck = ApiAuthenticationBizdockCheck.class)` 與 Swagger 的 `@ApiOperation`。API 認證用簽章機制（`framework.services.api.server.ApiSignatureServiceImpl`），API application 與 key 在 admin UI（`controllers/admin/ApiManagerController`）管理。
+
 ## 資料庫 Migration
 
 - script 位於 `maf-dbmdl/src/main/resources/repo/scripts/`（業務 table）和 `dbmdl-framework/src/main/resources/repo/scripts/`（framework table）。命名格式為 `YYYYMMDDhhmmss_<description>.sql`，版本彙整檔的名稱類似 `..._V17-2-0.sql`。
